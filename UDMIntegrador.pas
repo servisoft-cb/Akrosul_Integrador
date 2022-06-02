@@ -3,7 +3,8 @@ unit UDMIntegrador;
 interface
 
 uses
-  SysUtils, Classes, DB, DBClient;
+  SysUtils, Classes, DB, DBClient, frxClass, frxDBSet, frxRich,
+  frxExportMail, frxExportPDF;
 
 type
   TDMIntegrador = class(TDataModule)
@@ -14,6 +15,12 @@ type
     mAvisosTipo: TStringField;
     mAvisosObs: TStringField;
     mAvisosTipo_Reg: TStringField;
+    mAvisosReferencia: TStringField;
+    frxReport1: TfrxReport;
+    frxPDFExport1: TfrxPDFExport;
+    frxMailExport1: TfrxMailExport;
+    frxRichObject1: TfrxRichObject;
+    frxmAvisos: TfrxDBDataset;
   private
     { Private declarations }
   public

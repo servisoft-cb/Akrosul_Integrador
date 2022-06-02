@@ -1,9 +1,9 @@
 object frmIntegrador: TfrmIntegrador
   Left = 222
   Top = 121
-  Width = 813
+  Width = 895
   Height = 573
-  Caption = 'Integrador'
+  Caption = 'Integrador   (01/06/2022  v.2)'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,7 @@ object frmIntegrador: TfrmIntegrador
   object pnlPrincipal: TAdvPanel
     Left = 0
     Top = 0
-    Width = 805
+    Width = 887
     Height = 542
     Align = alClient
     BevelWidth = 10
@@ -65,7 +65,7 @@ object frmIntegrador: TfrmIntegrador
     end
     object Label3: TLabel
       Left = 36
-      Top = 47
+      Top = 31
       Width = 69
       Height = 13
       Caption = 'Arquivo Excel:'
@@ -80,10 +80,12 @@ object frmIntegrador: TfrmIntegrador
     end
     object File_Produto: TFilenameEdit
       Left = 108
-      Top = 39
+      Top = 23
       Width = 448
       Height = 21
+      Ctl3D = False
       NumGlyphs = 1
+      ParentCtl3D = False
       TabOrder = 0
     end
     object btnProduto: TNxButton
@@ -259,8 +261,10 @@ object frmIntegrador: TfrmIntegrador
       Width = 78
       Height = 21
       AutoSize = False
+      Ctl3D = False
       DecimalPlaces = 0
       DisplayFormat = '0'
+      ParentCtl3D = False
       TabOrder = 2
     end
     object ceTotal: TCurrencyEdit
@@ -269,8 +273,10 @@ object frmIntegrador: TfrmIntegrador
       Width = 78
       Height = 21
       AutoSize = False
+      Ctl3D = False
       DecimalPlaces = 0
       DisplayFormat = '0'
+      ParentCtl3D = False
       TabOrder = 3
     end
     object NxButton1: TNxButton
@@ -279,6 +285,7 @@ object frmIntegrador: TfrmIntegrador
       Width = 200
       Height = 47
       Caption = 'Integrar Fornecedor'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -349,7 +356,7 @@ object frmIntegrador: TfrmIntegrador
     object RzPageControl1: TRzPageControl
       Left = 10
       Top = 180
-      Width = 785
+      Width = 867
       Height = 352
       ActivePage = TabSheet1
       Align = alBottom
@@ -358,11 +365,11 @@ object frmIntegrador: TfrmIntegrador
       FixedDimension = 19
       object TabSheet1: TRzTabSheet
         Color = 15325901
-        Caption = 'Observa'#231#227'o'
+        Caption = 'Observa'#231#227'o (Mostrar os produtos com avisos)'
         object SMDBGrid1: TSMDBGrid
           Left = 0
           Top = 0
-          Width = 781
+          Width = 863
           Height = 329
           Align = alClient
           Ctl3D = False
@@ -388,22 +395,32 @@ object frmIntegrador: TfrmIntegrador
           GridStyle.EvenColor = clWindow
           TitleHeight.PixelCount = 24
           FooterColor = clBtnFace
-          ExOptions = [eoENTERlikeTAB, eoKeepSelection, eoStandardPopup, eoBLOBEditor, eoTitleWordWrap]
+          ExOptions = [eoENTERlikeTAB, eoKeepSelection, eoStandardPopup, eoBLOBEditor, eoTitleWordWrap, eoShowFilterBar]
           RegistryKey = 'Software\Scalabium'
           RegistrySection = 'SMDBGrid'
           WidthOfIndicator = 11
           DefaultRowHeight = 17
           ScrollBars = ssHorizontal
+          ColCount = 6
           RowCount = 2
           Columns = <
             item
               Expanded = False
               FieldName = 'Tipo'
+              Width = 115
               Visible = True
             end
             item
               Expanded = False
               FieldName = 'ID'
+              Title.Caption = 'ID Interno'
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'Referencia'
+              Title.Alignment = taCenter
+              Title.Caption = 'Refer'#234'ncia'
               Visible = True
             end
             item
@@ -427,9 +444,89 @@ object frmIntegrador: TfrmIntegrador
       Width = 78
       Height = 21
       AutoSize = False
+      Ctl3D = False
       DecimalPlaces = 0
       DisplayFormat = '0'
+      ParentCtl3D = False
       TabOrder = 6
+    end
+    object chkFornecedor: TNxCheckBox
+      Left = 109
+      Top = 47
+      Width = 250
+      Height = 21
+      TabOrder = 7
+      Text = 'chkFornecedor'
+      Caption = 'Gerar Fornecedor no Produto'
+    end
+    object btnExcel: TNxButton
+      Left = 611
+      Top = 168
+      Width = 153
+      Height = 29
+      Hint = 'Gerar arquivo csv dos avisos'
+      Caption = 'Avisos'
+      Glyph.Data = {
+        0A070000424D0A07000000000000360000002800000019000000170000000100
+        180000000000D406000000000000000000000000000000000000F7F7F7F7F7F7
+        F7F7F7F7F7F7F5F5F5FFFFFFB5BFAF1C3A092844162743152744152744152744
+        1527441526421531521C3D65253B60243B61243B61243B61243C61253A602326
+        500ED7DED400F7F7F7F7F7F7F7F7F7F7F7F7F7F7F7FFFFFF788B6E1534002845
+        1628451628451628451628451628451625421532521B3C64253C62253C62253C
+        62253C62253C622542662A083900B1BFAA00F7F7F7F6F6F6F6F6F5F6F6F6F5F5
+        F5FFFFFF86977C18370429461629461729461729461729461729461726431533
+        521B3D65263D63263D63263D63263D63263C622641662A0F3F00BAC6B100F7F5
+        F7FBFAFDFCFAFEFCFAFEFCFBFEFFFFFF88988016350327441627441727431727
+        431729461729461726431533521B3D65253D63253D63253D63253D63253D6324
+        41672A0F3F00B9C6B200FDFCFFF0F4EBECF1E8EDF3EAEDF2EAF9FDF885957B1A
+        38072643152643152643152642152540172744142442132F4E1D395E27385B26
+        385B26385B26385B26385B263D5E2B0C3800B8C3B100C9D7C60A4D00215F0022
+        5F00225F002460002A6700346F083771093671093572083673082F54142A441A
+        29421A385F1D497E2047792047792047792047792047791F4C7C231D5C00BDCE
+        B300B0C4B1004500366D062E68022762002E6701346D0A346C092D6602336C08
+        366D0C3571092E5B0F273F15263E173C6C10549D0C50970E50970D50970D5097
+        0D50970D55990F297F00C1D9B500B7C9B5074E0039700C376D0C3C731B276300
+        336A05236000397217386E0F346B0A36700A2C590F263E14253D163A68115095
+        0D4E8F104E90104E90104E90104E9010529111257700BED6B600B7C9B5064D00
+        366E07246000F9FBF990AE7A004000A1B998F7F9F9356C152F690436710A2C59
+        10273F15253D163B691150960E4F8F114F91114F91114F91114E911153921226
+        7800BFD6B600B7C9B5064C003C710E1C5A006D945BE9EFEB4F7E3AF5F7F2618D
+        50155600386F0D35700A2C580E263E15243C163A67114F960E4E90104E90104E
+        90104E90104E9010529211257700BED5B600B7C9B5064C003A700D356D0A1D5C
+        00ABC19EFEFCFDADC2A112530037700B366E0C36700A2C5710243B1622381538
+        66124F940E4C8E0F4C8E0F4C8E0F4C8E0F4C8E0F509111247500C0D4B600B7C9
+        B5064C003A700C386F0C19590086A77AFFFFFF87A87613540039710D366E0C35
+        6C0B3A6F0B3E720D3A6D0C4D891061A7175EA1155EA1155EA1155EA1155EA115
+        61A3183A8F00C5DBB300B7C9B5064C003B700D2B6600387020E9EFE79AB78BEE
+        F2E9336B17246000376F0D336B0C3C750B45810A427C0952910F64AB1862A718
+        62A81862A81862A81862A81866A91A3F9500C5DCB300B7C9B5064C003A710C19
+        5900D3E0CCDFE8DB054B00D2DED3E9EFE9256104326A07346C0C3B720C427B0C
+        3F760A508D0F63A81761A61861A61861A61861A61861A61865A8193D9300C5DD
+        B300B7C9B5064E0039700C2F6806568838366D112762002B6807578638397011
+        336C09346C0C3C720C427C0B40770A508D0F64A81761A71861A61761A61761A6
+        1761A61765A8193E9300C5DDB300B3C6B3034A003A710B356D0A2762002D6701
+        376F0C306A05276200336B07366E0C336B0B3B710B417B093F75094E8C0F61A7
+        165FA4155FA4155FA4155FA4155EA41562A6183B9100C4DCB300BCCBBA004100
+        225F001F5D00205E00205D0028630031690A326A0B3169093169083068083E75
+        0C46800D41790C55931469AE1B66AA1A66AA1A66AA1A66AA1A66AA1A69AB1D44
+        9900C7DDB400F2F3F29BB78A97B4849AB6899AB688A1BA916E9B4C3E7906457E
+        10447E0E447E0E457E0E4F8A13518C144D861264A21D7EBF297BBB287BBB287B
+        BB287BBB287BBB277DBC2D5DAD00CDE4B300F9F8FAFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFA8C586468403538E15528E15538E15518C15518C15508B154C851262
+        A21B7DC0287ABB277ABB277ABB277ABB277ABB277DBC2B5DAC00CDE3B300F6F6
+        F5F5F5F5F5F5F5F5F5F5F6F5F6FFFFFF9CBD79428102508C14508B15508B1550
+        8B15518B15518C154C861262A11B7CC0287BBA287BBC287BBC287BBC287BBC27
+        7DBD2C5CAC00CDE3B300F7F7F7F7F7F7F7F7F7F7F7F7F6F6F6FFFFFF98BB7544
+        8301548E16538D16538D16538D16538D16538E164F881465A21F7FC12B7DBB2B
+        7DBD2B7DBC2B7DBC2B7CBC2B7FBE2F5CAD00CBE1AF00F7F7F7F7F7F7F7F7F7F7
+        F7F7F5F5F6FFFFFFA4C0831E6B00287100297100297100297100297100297100
+        256C00418D0060B1005CAC005CAD005CAD005CAD005CAD005DAD0045A200D0E3
+        B700F7F7F7F7F7F7F7F7F7F7F7F7F6F6F6FAF8FBF5F5F3CFDDC5D1DFC5D2DFC5
+        D2DFC5D2DFC5D2DFC5D2DFC5D1DEC5D6E3C6DDEAC9DBE9C7DBE9C7DBE9C7DBE9
+        C7DBE9C7DBE9C6DAE8C5F9F7FA00}
+      TabOrder = 8
+      Transparent = True
+      OnClick = btnExcelClick
     end
   end
 end

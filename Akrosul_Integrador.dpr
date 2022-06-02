@@ -17,7 +17,9 @@ uses
   UDMCadUnidade in '..\ssfacil\UDMCadUnidade.pas' {DMCadUnidade: TDataModule},
   UDMCadGrupo in '..\ssfacil\UDMCadGrupo.pas' {DMCadGrupo: TDataModule},
   UDMCadMarca in '..\ssfacil\UDMCadMarca.pas' {DMCadMarca: TDataModule},
-  UDMEstoque in '..\ssfacil\UDMEstoque.pas' {DMEstoque: TDataModule};
+  UDMEstoque in '..\ssfacil\UDMEstoque.pas' {DMEstoque: TDataModule},
+  uUtilImpressao in '..\ssfacil\uUtilImpressao.pas',
+  UInformeEndereco in '..\ssfacil\UInformeEndereco.pas' {frmInformeEndereco};
 
 {$R *.res}
 

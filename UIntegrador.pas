@@ -7,7 +7,7 @@ uses
   Dialogs, RzTabs, Grids, DBGrids, SMDBGrid, NxCollection,
   ExtCtrls, StdCtrls, Mask, ToolEdit, ComObj, Buttons, DB, SqlExpr,
   CurrEdit, midaslib, UDMCadPessoa, UDMCadProduto, UDMIntegrador, AdvPanel, UDMCadNCM, UDMCadUnidade,
-  UDMCadGrupo, UDMCadMarca, UDMEstoque;
+  UDMCadGrupo, UDMCadMarca, UDMEstoque, NxEdit;
   
 type
   TfrmIntegrador = class(TForm)
@@ -25,9 +25,12 @@ type
     SMDBGrid1: TSMDBGrid;
     Label4: TLabel;
     ceGravados: TCurrencyEdit;
+    chkFornecedor: TNxCheckBox;
+    btnExcel: TNxButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnProdutoClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure btnExcelClick(Sender: TObject);
   private
     { Private declarations }
     fDMCadPessoa: TDMCadPessoa;
@@ -70,7 +73,7 @@ type
     procedure prc_Grava_Grupo(ID, Nome : String);
     procedure prc_Gravar_Unidade(Unidade : String);
 
-    procedure prc_Gravar_mAviso(ID : Integer; Nome, Tipo_Aviso, Obs, Tipo_Reg: String);
+    procedure prc_Gravar_mAviso(ID : Integer; Nome, Tipo_Aviso, Obs, Referencia, Tipo_Reg: String);
 
     procedure prc_Gravar_Estoque;
 
@@ -83,7 +86,8 @@ var
 
 implementation
 
-uses rsDBUtils, StrUtils, DateUtils, uUtilPadrao, DmdDatabase;
+uses rsDBUtils, StrUtils, DateUtils, uUtilPadrao, DmdDatabase,
+  UInformeEndereco;
 
 {$R *.dfm}
 
@@ -98,6 +102,7 @@ begin
   if MessageDlg('Confirma a geração dos Produtos?',mtConfirmation,[mbYes,mbNo],0) <> mrYes then
     exit;
   vTipo_Reg := 'P';
+  SMDBGrid1.ClearFilter;
   prc_Carrega_Xml;
 end;
 
@@ -295,11 +300,13 @@ begin
     fDMCadProduto.cdsProdutoREFERENCIA.AsString := gGrid.Cells[1,Linha];
     fDMCadProduto.cdsProdutoCOD_ANT.AsString    := vTexto1;
   end;
+  fDMCadProduto.cdsProdutoNOME.AsString          := gGrid.Cells[3,Linha];
+  fDMCadProduto.cdsProdutoNOME_ORIGINAL.AsString := gGrid.Cells[3,Linha];
 
-  vTexto1 := trim(gGrid.Cells[2,Linha]);
-  if trim(vTexto1) = '' then
+  vTexto1 := Monta_Numero(trim(gGrid.Cells[2,Linha]),8);
+  if trim(vTexto1) = '00000000' then
     prc_Gravar_mAviso(fDMCadProduto.cdsProdutoID.AsInteger,fDMCadProduto.cdsProdutoNOME.AsString,
-                      'Aviso','Produto sem NCM no arquivo EXCEL','Produto')
+                      'Aviso','Produto sem NCM no arquivo EXCEL',gGrid.Cells[1,Linha],'Produto')
   else
   begin
     vTexto2 := Monta_Numero(SQLLocate('TAB_NCM','NCM','ID',vTexto1),1);
@@ -308,8 +315,6 @@ begin
     else
       fDMCadProduto.cdsProdutoID_NCM.AsInteger := fnc_Grava_NCM(vTexto1);
   end;
-  fDMCadProduto.cdsProdutoNOME.AsString          := gGrid.Cells[3,Linha];
-  fDMCadProduto.cdsProdutoNOME_ORIGINAL.AsString := gGrid.Cells[3,Linha];
 
   vTexto1 := UpperCase(trim(gGrid.Cells[4,Linha]));
   if trim(vTexto1) = '' then
@@ -325,15 +330,18 @@ begin
   vTexto1 := trim(gGrid.Cells[6,Linha]);
   fDMCadProduto.cdsProdutoPRECO_VENDA.AsString := vTexto1;
 
-  vTexto1 := trim(gGrid.Cells[8,Linha]);
-  if trim(vTexto1) <> '' then
+  if chkFornecedor.Checked then
   begin
-    vTexto2 := SQLLocate('PESSOA','CNPJ_CPF','CODIGO',vTexto1);
-    if trim(vTexto2) <> '' then
-      fDMCadProduto.cdsProdutoID_FORNECEDOR.AsString := vTexto2
-    else
-      prc_Gravar_mAviso(fDMCadProduto.cdsProdutoID.AsInteger,fDMCadProduto.cdsProdutoNOME.AsString,
-                        'Aviso','Fornecedor não encontrado no CNPJ/CPF ' + vTexto1,'Produto');
+    vTexto1 := trim(gGrid.Cells[8,Linha]);
+    if trim(vTexto1) <> '' then
+    begin
+      vTexto2 := SQLLocate('PESSOA','CNPJ_CPF','CODIGO',vTexto1);
+      if trim(vTexto2) <> '' then
+        fDMCadProduto.cdsProdutoID_FORNECEDOR.AsString := vTexto2
+      else
+        prc_Gravar_mAviso(fDMCadProduto.cdsProdutoID.AsInteger,fDMCadProduto.cdsProdutoNOME.AsString,
+                          'Aviso','Fornecedor não encontrado no CNPJ/CPF ' + vTexto1,gGrid.Cells[1,Linha], 'Produto');
+    end;
   end;
 
   vTexto1 := Monta_Numero(UpperCase(trim(gGrid.Cells[9,Linha])),1);
@@ -345,8 +353,8 @@ begin
     fDMCadProduto.cdsProdutoID_MARCA.AsInteger := StrToInt(vTexto1);
   end;
 
-  vTexto1 := UpperCase(trim(gGrid.Cells[11,Linha]));
-  if trim(vTexto1) <> '' then
+  vTexto1 := Monta_Numero(UpperCase(trim(gGrid.Cells[11,Linha])),1);
+  if StrToInt(vTexto1) > 0 then
   begin
     vTexto2 := Monta_Numero( SQLLocate('GRUPO','ID','ID',vTexto1),1);
     if vTexto2 = '0' then
@@ -396,9 +404,9 @@ begin
   vContador := vContador + 1;
 
   vTexto1 := Monta_Numero(gGrid.Cells[15,Linha],1);
-  prc_Gravar_Estoque; 
+  if (trim(vTexto1) <> '0') and (trim(copy(vTexto1,1,1)) <> '-') and (trim(copy(vTexto1,1,1)) <> '0') then
+    prc_Gravar_Estoque; 
 end;
-
 
 procedure TfrmIntegrador.prc_Gravar_Cliente;
 var
@@ -551,7 +559,7 @@ begin
   fDMCadNCM.prc_Inserir;
   vID    := fDMCadNCM.cdsNCMID.AsInteger;
   Result := vID; 
-  fDMCadNCM.cdsNCMNCM.AsString  := NCM;
+  fDMCadNCM.cdsNCMNCM.AsString  := Monta_Numero(NCM,8);
   fDMCadNCM.cdsNCMNOME.AsString := '';
   fDMCadNCM.cdsNCMGERAR_ST.AsString := 'N';
   fDMCadNCM.cdsNCMINATIVO.AsString  := 'N';
@@ -573,7 +581,7 @@ begin
 end;
 
 procedure TfrmIntegrador.prc_Gravar_mAviso(ID: Integer; Nome, Tipo_Aviso,
-  Obs, Tipo_Reg: String);
+  Obs, Referencia, Tipo_Reg: String);
 begin
   fDMIntegrador.mAvisos.Insert;
   fDMIntegrador.mAvisosID.AsInteger      := ID;
@@ -684,6 +692,22 @@ begin
                                           0); //Item Pedido );
 
 
+end;
+
+procedure TfrmIntegrador.btnExcelClick(Sender: TObject);
+var
+  vAno,vMes, vDia: Word;
+begin
+  frmInformeEndereco := TfrmInformeEndereco.Create(self);
+  try
+    frmInformeEndereco.ShowModal;
+  finally
+    FreeAndNil(frmInformeEndereco);
+  end;
+  if copy(vEndereco_Arq,Length(vEndereco_Arq),1) <> '\' then
+    vEndereco_Arq := vEndereco_Arq + '\';
+  DecodeDate(Date,vAno,vMes,vDia);
+  prc_Preencher_CSV(SMDBGrid1.DataSource, SMDBGrid1,'Avisos_' + FormatFloat('0000',vAno) + '_' + FormatFloat('00',vMes) + '.CSV')
 end;
 
 end.
