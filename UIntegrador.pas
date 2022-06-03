@@ -27,6 +27,7 @@ type
     ceGravados: TCurrencyEdit;
     chkFornecedor: TNxCheckBox;
     btnExcel: TNxButton;
+    chkGerarProdutos: TNxCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnProdutoClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -277,6 +278,7 @@ var
   vPesoLiquido, vVlrCompra, vVlrVenda : Real;
   vQtd_Estoque: Real;
   vTexto2: String;
+  vPrecoVenda: Real;
 begin
   vTexto1 := gGrid.Cells[0,Linha];
   if not(vAchou_ID) and (trim(UpperCase(vTexto1)) <> 'ID') then
@@ -289,8 +291,27 @@ begin
   end;
   if (trim(vTexto1) = '') then
     exit;
+
+  vTexto1 := trim(gGrid.Cells[2,Linha]);
+  if not(chkGerarProdutos.Checked) then
+  begin
+    if ((trim(vTexto1) = '00000000') or (Length(trim(vTexto1)) < 8)) then
+    begin
+      prc_Gravar_mAviso(fDMCadProduto.cdsProdutoID.AsInteger,fDMCadProduto.cdsProdutoNOME.AsString,
+                        'Erro','Produto com problema no NCM (produto NÃO gravado)',gGrid.Cells[1,Linha],'Produto');
+      exit;
+    end;
+    vTexto1     := Monta_Numero(trim(gGrid.Cells[6,Linha]),1);
+    vPrecoVenda := StrToFloat(vTexto1);
+    if vPrecoVenda <= 0 then
+    begin
+      prc_Gravar_mAviso(fDMCadProduto.cdsProdutoID.AsInteger,fDMCadProduto.cdsProdutoNOME.AsString,
+                        'Erro','Preço de venda não informado (produto NÃO gravado)',gGrid.Cells[1,Linha],'Produto');
+      exit;
+    end;
+  end;
   fDMCadProduto.prc_Localizar(StrToInt(vTexto1));
-  
+
   if fDMCadProduto.cdsProdutoID.AsInteger > 0 then
     fDMCadProduto.cdsProduto.Edit
   else
@@ -306,7 +327,7 @@ begin
   vTexto1 := Monta_Numero(trim(gGrid.Cells[2,Linha]),8);
   if trim(vTexto1) = '00000000' then
     prc_Gravar_mAviso(fDMCadProduto.cdsProdutoID.AsInteger,fDMCadProduto.cdsProdutoNOME.AsString,
-                      'Aviso','Produto sem NCM no arquivo EXCEL',gGrid.Cells[1,Linha],'Produto')
+                      'Aviso','Produto sem NCM no arquivo EXCEL (produto gravado)',gGrid.Cells[1,Linha],'Produto')
   else
   begin
     vTexto2 := Monta_Numero(SQLLocate('TAB_NCM','NCM','ID',vTexto1),1);
@@ -329,7 +350,9 @@ begin
   fDMCadProduto.cdsProdutoPRECO_CUSTO_TOTAL.AsString := vTexto1;
   vTexto1 := trim(gGrid.Cells[6,Linha]);
   fDMCadProduto.cdsProdutoPRECO_VENDA.AsString := vTexto1;
-
+  if fDMCadProduto.cdsProdutoPRECO_VENDA.AsFloat <= 0 then
+    prc_Gravar_mAviso(fDMCadProduto.cdsProdutoID.AsInteger,fDMCadProduto.cdsProdutoNOME.AsString,
+                      'Aviso','Preço de venda não informado',gGrid.Cells[1,Linha],'Produto');
   if chkFornecedor.Checked then
   begin
     vTexto1 := trim(gGrid.Cells[8,Linha]);

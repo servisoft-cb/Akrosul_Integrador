@@ -3,7 +3,7 @@ object frmIntegrador: TfrmIntegrador
   Top = 121
   Width = 895
   Height = 573
-  Caption = 'Integrador   (01/06/2022  v.2)'
+  Caption = 'Integrador   (03/06/2022  v.3)'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -527,6 +527,15 @@ object frmIntegrador: TfrmIntegrador
       TabOrder = 8
       Transparent = True
       OnClick = btnExcelClick
+    end
+    object chkGerarProdutos: TNxCheckBox
+      Left = 405
+      Top = 47
+      Width = 250
+      Height = 21
+      TabOrder = 9
+      Text = 'chkFornecedor'
+      Caption = 'Gerar Produtos Sem Pre'#231'o/NCM incorreto'
     end
   end
 end
