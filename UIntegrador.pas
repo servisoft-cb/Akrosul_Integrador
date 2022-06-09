@@ -310,6 +310,7 @@ begin
       exit;
     end;
   end;
+  vTexto1 := gGrid.Cells[0,Linha];
   fDMCadProduto.prc_Localizar(StrToInt(vTexto1));
 
   if fDMCadProduto.cdsProdutoID.AsInteger > 0 then

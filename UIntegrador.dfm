@@ -3,7 +3,7 @@ object frmIntegrador: TfrmIntegrador
   Top = 121
   Width = 895
   Height = 573
-  Caption = 'Integrador   (03/06/2022  v.3)'
+  Caption = 'Integrador   (08/06/2022  v.4)'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -460,8 +460,8 @@ object frmIntegrador: TfrmIntegrador
       Caption = 'Gerar Fornecedor no Produto'
     end
     object btnExcel: TNxButton
-      Left = 611
-      Top = 168
+      Left = 650
+      Top = 139
       Width = 153
       Height = 29
       Hint = 'Gerar arquivo csv dos avisos'
