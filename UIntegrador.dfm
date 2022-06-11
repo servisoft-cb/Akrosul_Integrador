@@ -3,7 +3,7 @@ object frmIntegrador: TfrmIntegrador
   Top = 121
   Width = 895
   Height = 573
-  Caption = 'Integrador   (08/06/2022  v.4)'
+  Caption = 'Integrador   (11/06/2022  v.5)'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

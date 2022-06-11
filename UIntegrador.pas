@@ -423,13 +423,30 @@ begin
   fDMCadProduto.cdsProdutoTIPO_VENDA.AsString      := 'R';
   fDMCadProduto.cdsProdutoUSA_NA_BALANCA.Clear;
   fDMCadProduto.cdsProdutoUSA_GRADE.AsString       := 'N';
-  fDMCadProduto.prc_Gravar;
+  try
+    fDMCadProduto.prc_Gravar;
+    vContador := vContador + 1;
 
-  vContador := vContador + 1;
+  except
+    on E: exception do
+    begin
+      prc_Gravar_mAviso(fDMCadProduto.cdsProdutoID.AsInteger,fDMCadProduto.cdsProdutoNOME.AsString,
+                      'Erro','Erro ao gravar o produto ' + E.Message ,gGrid.Cells[1,Linha],'Produto');
+    end;
+  end;
 
-  vTexto1 := Monta_Numero(gGrid.Cells[15,Linha],1);
-  if (trim(vTexto1) <> '0') and (trim(copy(vTexto1,1,1)) <> '-') and (trim(copy(vTexto1,1,1)) <> '0') then
-    prc_Gravar_Estoque; 
+  try
+    vTexto1 := Monta_Numero(gGrid.Cells[15,Linha],1);
+    if (trim(vTexto1) <> '0') and (trim(copy(vTexto1,1,1)) <> '-') and (trim(copy(vTexto1,1,1)) <> '0') then
+      prc_Gravar_Estoque;
+  except
+    on E: exception do
+    begin
+      prc_Gravar_mAviso(fDMCadProduto.cdsProdutoID.AsInteger,fDMCadProduto.cdsProdutoNOME.AsString,
+                      'Erro','Erro ao gravar o estoque ' + E.Message ,gGrid.Cells[1,Linha],'Produto');
+    end;
+  end;
+
 end;
 
 procedure TfrmIntegrador.prc_Gravar_Cliente;
